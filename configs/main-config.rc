@@ -9,6 +9,13 @@
 # November 01, 2017
 #
 
+# NOTE
+# Creating a br-test bridge for private networking. It will be only inside the controller node
+# IP : 192.168.58.200
+# Problem: Cannot use for installing compute nodes on different hosts. Good enough for existing
+# scenario because then we will have one port open for hosting VMs and another port open for
+# internet connectivity and bridging of VMs to present production network.
+
 #
 #
 # SECURITY CONFIGURATION
@@ -28,17 +35,17 @@
 # nodes, set the variable to your private network where all your openstack nodes are
 # connected. Example: osprivatenetwork="192.168.56.0/24"
 # Please, never ever use "0.0.0.0/0" here
-osprivatenetwork="192.168.56.60"
+osprivatenetwork="192.168.58.200"
 #
 # Keystone is already exposed to the IP's or Network configured on the "osprivatenetwork"
 # variable, but, you can expose all keystone endpoints (ports 5000 and 35357) to an
-# additional admin network, or even "0.0.0.0/0" if you want your Keystone to be reacheable 
+# additional admin network, or even "0.0.0.0/0" if you want your Keystone to be reacheable
 # from all the world.
 #
-keystoneclientnetwork="192.168.56.60"
+keystoneclientnetwork="192.168.58.200"
 #
 # Manila and Designate are already exposed to any IP or Net included on the
-# "osprivatenetwork" variable. If you want to expose both Manila and Designate services 
+# "osprivatenetwork" variable. If you want to expose both Manila and Designate services
 # to a specific/additional network, IP, or to all the world, set the following variables:
 #
 manilaclientnetwork="0.0.0.0/0"
@@ -98,7 +105,7 @@ dbpopulate="yes"
 # no action is taken for database installation, creation or population.
 #
 # Here you define the database backend server IP address. You can use an IP or a FQDN:
-dbbackendhost="192.168.56.60"
+dbbackendhost="192.168.58.200"
 #
 # DB Max connections. This parameter needs to be adjusted according to your available
 # cores in your controller
@@ -117,7 +124,7 @@ dbmaxcons="1000"
 messagebrokerinstall="yes"
 # The IP or FQDN of the message broker (always fill this, no matter if you are installing
 # a controller or a compute node).
-messagebrokerhost="192.168.56.60"
+messagebrokerhost="192.168.58.200"
 #
 # From MITAKA, we dropped QPID support. Our default is rabbitmq. Please DO NOT TRY to change
 # the following variable, or your installation WILL BREAK.
@@ -208,7 +215,7 @@ keystoneinstall="yes"
 #
 # Either controller or compute, put the IP or FQDN for the keystone host,
 # normally, the controller server.
-keystonehost="192.168.56.60"
+keystonehost="192.168.58.200"
 # Only if you are using MySQL as DB backend. If for any chance, you have multiple
 # keystone hosts, put here the IP address of the extra hosts, space separated.
 # Normally, this is not necessary unless your mysql service access policies are very
@@ -218,9 +225,9 @@ extrakeystonehosts=""
 SERVICE_TOKEN="044cb8c9e4a00a418827"
 
 #
-# PLEASE PLEASE PLEASE Leave Keystone Options following as they are. If you change 
-# the default protected config options, your OpenStack installation will be unusable 
-# 
+# PLEASE PLEASE PLEASE Leave Keystone Options following as they are. If you change
+# the default protected config options, your OpenStack installation will be unusable
+#
 # PROTECTED KEYSTONE CONFIG OPTIONS - DO NOT CHANGE !!!
 #
 keystoneadminuser="admin"
@@ -234,9 +241,9 @@ keystonereselleradminrole="ResellerAdmin"
 keystone_admin_rc_file="/root/keystonerc_admin"
 keystone_fulladmin_rc_file="/root/keystonerc_fulladmin"
 #
-# END OF PROTECTED KEYSTONE CONFIG OPTIONS 
-# 
-# Change the remaining following options to fit your cloud infraestructure needs 
+# END OF PROTECTED KEYSTONE CONFIG OPTIONS
+#
+# Change the remaining following options to fit your cloud infraestructure needs
 #
 keystoneadminuseremail="admin@localhost"
 keystoneadminpass="0p3nSt4ck"
@@ -275,7 +282,7 @@ domainextratenants="localhost"
 # Change the IP, password and e-mail accordingly to your installation scenario.
 #
 swiftinstall="no"
-swifthost="192.168.56.60"
+swifthost="192.168.58.200"
 swiftuser="swift"
 swiftsvce="swift"
 swiftpass="0p3nSt4ck"
@@ -323,7 +330,7 @@ glanceinstall="yes"
 # you are installing the controller or a compute node. This is normally the controller
 # IP address or FQDN if you prefer to use DNS. Also, remember to change the password and
 # e-mail.
-glancehost="192.168.56.60"
+glancehost="192.168.58.200"
 glanceuser="glance"
 glancesvce="glance"
 glancepass="0p3nSt4ck"
@@ -356,7 +363,7 @@ cinderinstall="yes"
 # e-mail.
 # Note that "cinderhost" IP/FQDN is the one of your controller and it must be the same
 # configured in all your cinder hosts, because it represents the "cinder controller" IP.
-cinderhost="192.168.56.60"
+cinderhost="192.168.58.200"
 cinderuser="cinder"
 cindersvce="cinder"
 cindersvcev2="cinderv2"
@@ -366,9 +373,9 @@ cinderemail="cinder@localhost"
 # If your cinder node is a storage host (not all-in-one, not a controller), set the
 # IP of your host here. If you are installing an "all-in-one" or a "controller", the
 # ip here must be the same as in "cinderhost" variable above. If this node is a dedicated
-# storage node, the "cinderhost" variable must be the same as your cinder controller, and 
+# storage node, the "cinderhost" variable must be the same as your cinder controller, and
 # the following variable must be set to the "specific storage node" you are configuring:
-cindernodehost="192.168.56.60"
+cindernodehost="192.168.58.200"
 #
 # Next, you can select your storage backends. Do this if you are installing a cinder
 # storage solution (cinder server with storage, or cinder storage-only node).
@@ -379,7 +386,7 @@ cinderconfiglvm="yes"
 # Our default is to use iscsi. Put here the iscsi server IP. It can be the one of the
 # controller, if you are using a LVM "cinder-volumes" inside the controller. Also, if you are
 # configuring a dedicated storage node, set the node IP here (not the one of your controller)
-cinder_iscsi_ip_address="192.168.56.60"
+cinder_iscsi_ip_address="192.168.58.200"
 cinderlvmname="cinder-volumes"
 # Only if you are using MySQL as DB backend. If for any chance, you have multiple
 # cinder hosts, put here the IP address of the extra hosts, space separated.
@@ -395,7 +402,7 @@ cindercleanatuninstall="yes"
 #
 cinderconfignfs="no"
 #
-# Also, change the nfs resource for openstack. Tipically, an IP or FQDN followed by 
+# Also, change the nfs resource for openstack. Tipically, an IP or FQDN followed by
 # ":" and the resource path
 #
 nfsresource="192.168.1.1:/data/openstack-nfs"
@@ -455,13 +462,13 @@ neutroninstall="yes"
 neutron_in_compute_node="no"
 #
 # The IP or FQDN of your neutron network node or controller
-neutronhost="192.168.56.60"
+neutronhost="192.168.58.200"
 #
 # If you are installing a compute node, the following variable must be set to the
 # server IP address (the server you are just installing). If you are installing a
 # neutron network node or an ALL-IN-ONE server, use the same IP of the neutronhost
 # variable.
-neutron_computehost="192.168.56.60"
+neutron_computehost="192.168.58.200"
 #
 # Here, you should chang the password and e-mail
 neutronuser="neutron"
@@ -476,17 +483,17 @@ neutronapiworkers="2"
 # select your network mappings. Please, ensure you understand OpenStack
 # network philosophy before you configure this.
 # Our defaults assumes a flat network configuration with external routers connected
-# to an openvswitch br-enp0s9 switch. Change those defaults to suit your network or
+# to an openvswitch br-enp0s8 switch. Change those defaults to suit your network or
 # your system will not have a viable network service.
 integration_bridge="br-int"
 # The bridge_mappings must be set in the form:
 # physical_network_name01:bridge_interface01,physical_network_name02:bridge_interface02
 # Sample:
-# bridge_mappings="physical01:br-eth1,physical02:br-enp0s9,physical03:br-em2"
+# bridge_mappings="physical01:br-eth1,physical02:br-enp0s8,physical03:br-em2"
 # VERY IMPORTANT NOTE: Ensure your OVS Bridges are created before you install openstack,
 # including br-int and all bridges defined in the "bridge_mappings" variable. Fail
 # to do this, and Neutron will be unable to function properlly.
-bridge_mappings="physical01:br-enp0s9"
+bridge_mappings="physical01:br-enp0s8"
 dhcp_domain="localdomain"
 metadata_shared_secret="0p3nSt4ck"
 # VM's Base Mac. Normally you should not need to change this
@@ -543,7 +550,8 @@ dhcp_agents_per_network="1"
 # in your bridge_mappings above (se the sample: physical01:br-eth2)
 # Sample:
 # flat_network_create_list="physical01:public physical01:private physical02:external physical02:internal"
-flat_network_create="no"
+flat_network_create_list="physical01:br-enp0s8"
+flat_network_create="yes"
 flat_network_create_list=""
 # Also, you need to set up your physical FLAT network names. Sample:
 # flat_networks="physical01,physical02"
@@ -598,12 +606,12 @@ nova_in_compute_node="no"
 nova_without_compute="no"
 #
 # This is the IP of your nova control node, controller or ALL-IN-ONE server.
-novahost="192.168.56.60"
+novahost="192.168.58.200"
 #
 # If you are installing NOVA in a compute node, the following IP must be ser to the server IP. If you
 # are installing a nova control node, all-in-one or controller, the IP must be set as the same in
 # "novahost" variable.
-nova_computehost="192.168.56.60"
+nova_computehost="192.168.58.200"
 #
 # Here you normally only need to change the password and e-mail:
 novauser="nova"
@@ -638,9 +646,9 @@ disk_allocation_ratio="1.0"
 # Options: vnc or spice. Default: vnc
 consoleflavor="vnc"
 # Spice Server: This is the IP of our controller, ALL-IN-ONE, or nova control node:
-spiceserver_controller_address="192.168.56.60"
+spiceserver_controller_address="192.168.58.200"
 # VNC Server: This is the IP of our controller, ALL-IN-ONE, or nova control node:
-vncserver_controller_address="192.168.56.60"
+vncserver_controller_address="192.168.58.200"
 # Keymap: User "us" or "es" here
 vnc_keymap="es"
 #
@@ -688,7 +696,7 @@ vhostnet="yes"
 # If you are installing a controller, ALL-IN-ONE or compute node, and you want to
 # include metrics in your cloud, set this to yes. Also, if you plan to use HEAT with
 # AutoScaling, YOU MUST set this to yes:
-ceilometerinstall="yes"
+ceilometerinstall="no"
 #
 # If you are installing a full ceilometer node, or a pure controller (no compute service),
 # set the following variable to "no".
@@ -705,9 +713,9 @@ ceilometer_in_compute_node="no"
 ceilometer_without_compute="no"
 #
 # This is the IP of the ceilometer node host or controller. It is the same for all 3 entries:
-ceilometerhost="192.168.56.60"
-aodhhost="192.168.56.60"
-gnocchihost="192.168.56.60"
+ceilometerhost="192.168.58.200"
+aodhhost="192.168.58.200"
+gnocchihost="192.168.58.200"
 # Only if you are using MySQL as DB backend. If for any chance, you have multiple
 # aodh hosts, put here the IP address of the extra hosts, space separated.
 # Normally, this is not necessary unless your mysql service access policies are very
@@ -730,7 +738,7 @@ aodhemail="aodh@localhost"
 #
 # MongoDB access information. We recommend to leave this as it is.. Just change the IP.
 # The IP should be the one where the ceilometer node or controller is installed.
-mondbhost="192.168.56.60"
+mondbhost="192.168.58.200"
 mondbport="27017"
 mondbname="ceilometer"
 mondbuser="ceilometer"
@@ -778,9 +786,9 @@ gnocchiworkers="2"
 #
 # Install heat on the controller only. Our default is "no", but set the following variable to "yes"
 # if you don't want to install heat. Again: IN THE CONTROLLER !!!
-heatinstall="yes"
+heatinstall="no"
 # The heat host IP: Normally, the controller IP
-heathost="192.168.56.60"
+heathost="192.168.58.200"
 # Change the password and email
 heatuser="heat"
 heatsvce="heat"
@@ -814,7 +822,7 @@ heatworkers="2"
 # IN THE CONTROLLER
 troveinstall="no"
 # The controller IP of course.... ;)
-trovehost="192.168.56.60"
+trovehost="192.168.58.200"
 # As usual, change the password and e-mail.
 troveuser="trove"
 trovesvce="trove"
@@ -869,7 +877,7 @@ troveworkers="2"
 # sahara host
 saharainstall="no"
 # The controller IP or the IP of the dedicated sahara host.
-saharahost="192.168.56.60"
+saharahost="192.168.58.200"
 # Again, change the password and e-mail
 saharauser="sahara"
 saharasvce="sahara"
@@ -887,11 +895,11 @@ extrasaharahosts=""
 # OPENSTACK MANILA
 #
 # Same as with heat,trove and sahara. By default we don't install them. If you want to include
-# manila in your cloud, set this yo YES. And again, install this in the controller or in a 
+# manila in your cloud, set this yo YES. And again, install this in the controller or in a
 # dedicated manila host
 manilainstall="no"
 # The controller IP or the IP of the dedicated manila host.
-manilahost="192.168.56.60"
+manilahost="192.168.58.200"
 # Again, change the password and e-mail
 manilauser="manila"
 manilasvcev1="manila"
@@ -903,7 +911,7 @@ manilaemail="manila@localhost"
 # the default is "yes", meaning, all lv's in the manila-volumes vg will be erased.
 manilacleanatuninstall="yes"
 #
-# We can configure the LVM based VG for you. This requires an already present 
+# We can configure the LVM based VG for you. This requires an already present
 # manila-dedicated volume group.
 manilalvmbackend="yes"
 # The Manila VG Name - This must be already created or your manila installation
@@ -927,7 +935,7 @@ extramanilahosts=""
 # As with the other modules (trove, manila, etc.) our default is "no". Change it to "yes" in
 # order to install designate:
 designateinstall="no"
-designatehost="192.168.56.60"
+designatehost="192.168.58.200"
 # Again, change the password and e-mail
 designateuser="designate"
 designatesvc="designate"
@@ -938,7 +946,7 @@ designateemail="designate@localhost"
 # by default inside your zone pool.
 zonepooldefaultemail="designateadmin@localdomain.dom"
 #
-# Our installer provision designate TLD's from the file at: 
+# Our installer provision designate TLD's from the file at:
 # http://data.iana.org/TLD/tlds-alpha-by-domain.txt
 # but, you can add extra TLD's (normally not "legal" tld's) that you would like to define
 # inside your organization. Note that you cannot create domains whose tld's are not defined
@@ -976,7 +984,7 @@ magnuminstall="no"
 # registry, you'll need "swift" too.
 #
 # The magnum host IP: Normally, the controller IP
-magnumhost="192.168.56.60"
+magnumhost="192.168.58.200"
 # Change the password and email
 magnumuser="magnum"
 magnumsvce="magnum"
@@ -1023,7 +1031,7 @@ horizondbusage="yes"
 # Our timezone. Whatever timezone you use, please remember to escape the slash
 dashboard_timezone="America\/Caracas"
 # Your horizon server IP - normally the controller IP.
-horizonhost="192.168.56.60"
+horizonhost="192.168.58.200"
 # Only if you are using MySQL as DB backend. If for any chance, you have multiple
 # horizon hosts, put here the IP address of the extra hosts, space separated.
 # Normally, this is not necessary unless your mysql service access policies are very
@@ -1032,7 +1040,7 @@ extrahorizonhosts=""
 # If you don't use the database, we'll use the "PLEASE-DONT-USE-THIS" option of memcached
 memcached_spec="memcached:\/\/127.0.0.1:11211\/"
 # Finally, the branding name. Set as your personal or corporate preference
-brandingname="OpenStack Private Cloud"
+brandingname="IIITB Private Cloud"
 
 #
 # END OF THE CONFIGURATION FILE
