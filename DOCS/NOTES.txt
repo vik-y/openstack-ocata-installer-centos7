@@ -59,6 +59,9 @@ If you do not have configured this, please do it now and then reboot the machine
 
 3. OpenVSWITCH:
 
+Before getting started with OpenVSWITCH make sure you have two interfaces available both of which are on different networks. 
+We will use one interface for provider network and other for management network. For example let's assume we have two interfaces namely `enp0s8` and `enp0s9` both of which are on different networks. We want to use `enp0s8` for management network and `enp0s9` for provider network. Keeping that in mind let's proceed further.
+
 First install openvswitch. Run the commands below (after placing the repositories listed above):
 
 yum -y install openvswitch
@@ -73,13 +76,46 @@ First step: br-int (OpenStack integration switch/bridge):
 
 ovs-vsctl add-br br-int
 
-Next step: br-enp0s9 (OpenStack networks switch/bridge). Example for "enp0s9" interface:
+Next step: br-enp0s9 (OpenStack networks switch/bridge). Example for "enp0s9" interface. NOTE: Modify the commands as per the interface on your system. 
 
 ovs-vsctl add-br br-enp0s9
 ovs-vsctl add-port br-enp0s9 enp0s9
 
+```
+# /etc/sysconfig/network-scripts/ifcfg-br-enp0s9
+# ifcfg-br-enp0s9
+TYPE="OVSBridge"
+BOOTPROTO="none"
+NAME="br-enp0s9"
+DEVICE="br-enp0s9"
+ONBOOT="yes"
+IPADDR="192.168.59.200"
+PREFIX="24"
+GATEWAY="192.168.59.1"
+
+
+# /etc/sysconfig/network-scripts/ifcfg-br-enp0s9
+# ifcfg-enp0s9
+TYPE="Ethernet"
+BOOTPROTO="none"
+NAME="enp0s9"
+DEVICE="enp0s9"
+ONBOOT="yes"
+TYPE="OVSPort"
+DEVICETYPE="ovs"
+OVS_BRIDGE="br-enp0s9"
+
+# Note that we are not assigning any IP address to the to enp0s9. 
+
+# Configure enp0s8 as per your management network. 
+```
+
 Please remember that in Centos the interfaces are using the new names. ethX is no longer used,
 unless you are running a virtual machine with virtio (network).
+
+Once the above mentioned bridges are created - you can create the following network scripts to make your work easier in CentOS
+```
+```
 
 
 NOTE: Always try to use an interface that is FREE and can be "dedicated" to OpenStack. 
